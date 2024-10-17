@@ -1,6 +1,6 @@
 // app/views/CalculatorScreen.tsx
-import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import { useCalculatorContext } from "../context/CalculatorContext";
 import { RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../../App";
@@ -42,6 +42,17 @@ export const CalculatorScreen: React.FC<CalculatorScreenProps> = ({
   if (!calculator) {
     return <Text>Calculator not found</Text>;
   }
+
+  useEffect(() => {
+    if (calculator.result === "69" || calculator.result === "80085") {
+      Toast.show({
+        text1: "Nice!",
+        position: "top",
+        type: "success",
+        visibilityTime: 2000,
+      });
+    }
+  }, [calculator.result]);
 
   const handleButtonPress = (value: string) => {
     let updatedExpression = calculator.expression;
@@ -112,17 +123,6 @@ export const CalculatorScreen: React.FC<CalculatorScreenProps> = ({
 
     // Evaluate the expression
     evaluateExpression(calculator.id);
-
-    // Check for specific results to show toast immediately
-    const result = calculators.find((c) => c.id === calculator.id)?.result;
-    if (result === "69" || result === "80085") {
-      Toast.show({
-        text1: "Nice!",
-        position: "top",
-        type: "success",
-        visibilityTime: 2000,
-      });
-    }
   };
 
   return (
@@ -136,47 +136,48 @@ export const CalculatorScreen: React.FC<CalculatorScreenProps> = ({
         </Text>
       </View>
 
-      {/* Button Layout */}
-      <View style={styles.row}>
-        <ButtonComponent label="√" onPress={() => handleButtonPress("sqrt(")} />
-        <ButtonComponent label="π" onPress={() => handleButtonPress("pi")} />
-        <ButtonComponent label="^" onPress={() => handleButtonPress("^")} />
-        <ButtonComponent label="!" onPress={() => handleButtonPress("!")} />
-      </View>
-      <View style={styles.row}>
-        <ButtonComponent
-          label="AC"
-          onPress={() => clearCalculator(calculator.id)}
-        />
-        <ButtonComponent label="( )" onPress={() => handleButtonPress("( )")} />
-        <ButtonComponent label="%" onPress={() => handleButtonPress("%")} />
-        <ButtonComponent label="/" onPress={() => handleButtonPress("/")} />
-      </View>
+      <ScrollView contentContainerStyle={styles.buttonsContainer}>
+        <View style={styles.row}>
+          <ButtonComponent label="√" onPress={() => handleButtonPress("sqrt(")} />
+          <ButtonComponent label="π" onPress={() => handleButtonPress("pi")} />
+          <ButtonComponent label="^" onPress={() => handleButtonPress("^")} />
+          <ButtonComponent label="!" onPress={() => handleButtonPress("!")} />
+        </View>
+        <View style={styles.row}>
+          <ButtonComponent
+            label="AC"
+            onPress={() => clearCalculator(calculator.id)}
+          />
+          <ButtonComponent label="( )" onPress={() => handleButtonPress("( )")} />
+          <ButtonComponent label="%" onPress={() => handleButtonPress("%")} />
+          <ButtonComponent label="/" onPress={() => handleButtonPress("/")} />
+        </View>
 
-      <View style={styles.row}>
-        <ButtonComponent label="7" onPress={() => handleButtonPress("7")} />
-        <ButtonComponent label="8" onPress={() => handleButtonPress("8")} />
-        <ButtonComponent label="9" onPress={() => handleButtonPress("9")} />
-        <ButtonComponent label="*" onPress={() => handleButtonPress("*")} />
-      </View>
-      <View style={styles.row}>
-        <ButtonComponent label="4" onPress={() => handleButtonPress("4")} />
-        <ButtonComponent label="5" onPress={() => handleButtonPress("5")} />
-        <ButtonComponent label="6" onPress={() => handleButtonPress("6")} />
-        <ButtonComponent label="-" onPress={() => handleButtonPress("-")} />
-      </View>
-      <View style={styles.row}>
-        <ButtonComponent label="1" onPress={() => handleButtonPress("1")} />
-        <ButtonComponent label="2" onPress={() => handleButtonPress("2")} />
-        <ButtonComponent label="3" onPress={() => handleButtonPress("3")} />
-        <ButtonComponent label="+" onPress={() => handleButtonPress("+")} />
-      </View>
-      <View style={styles.row}>
-        <ButtonComponent label="0" onPress={() => handleButtonPress("0")} />
-        <ButtonComponent label="." onPress={() => handleButtonPress(".")} />
-        <ButtonComponent label="=" onPress={handleEqualsPress} />
-        <ButtonComponent label="⌫" onPress={() => backspace(calculator.id)} />
-      </View>
+        <View style={styles.row}>
+          <ButtonComponent label="7" onPress={() => handleButtonPress("7")} />
+          <ButtonComponent label="8" onPress={() => handleButtonPress("8")} />
+          <ButtonComponent label="9" onPress={() => handleButtonPress("9")} />
+          <ButtonComponent label="*" onPress={() => handleButtonPress("*")} />
+        </View>
+        <View style={styles.row}>
+          <ButtonComponent label="4" onPress={() => handleButtonPress("4")} />
+          <ButtonComponent label="5" onPress={() => handleButtonPress("5")} />
+          <ButtonComponent label="6" onPress={() => handleButtonPress("6")} />
+          <ButtonComponent label="-" onPress={() => handleButtonPress("-")} />
+        </View>
+        <View style={styles.row}>
+          <ButtonComponent label="1" onPress={() => handleButtonPress("1")} />
+          <ButtonComponent label="2" onPress={() => handleButtonPress("2")} />
+          <ButtonComponent label="3" onPress={() => handleButtonPress("3")} />
+          <ButtonComponent label="+" onPress={() => handleButtonPress("+")} />
+        </View>
+        <View style={styles.row}>
+          <ButtonComponent label="0" onPress={() => handleButtonPress("0")} />
+          <ButtonComponent label="." onPress={() => handleButtonPress(".")} />
+          <ButtonComponent label="=" onPress={handleEqualsPress} />
+          <ButtonComponent label="⌫" onPress={() => backspace(calculator.id)} />
+        </View>
+      </ScrollView>
 
       <Toast />
     </View>
@@ -196,6 +197,9 @@ const styles = StyleSheet.create({
   },
   lastExpression: { fontSize: 16, color: "#666" },
   result: { fontSize: 32, fontWeight: "bold" },
+  buttonsContainer: {
+    paddingBottom: 20,
+  },
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -212,3 +216,4 @@ const styles = StyleSheet.create({
   },
   buttonText: { color: "#fff", fontSize: 20 },
 });
+

@@ -46,43 +46,41 @@ export const HomeScreen: React.FC = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Calculators</Text>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <FlatList
-          data={calculators}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <View style={styles.calculatorItem}>
-              <TouchableOpacity
-                style={styles.calculatorNameContainer}
-                onPress={() =>
-                  navigation.navigate("Calculator", { calculatorId: item.id })
-                }
-              >
-                <Text style={styles.calculatorName}>{item.name}</Text>
-                {item.lastExpression && (
-                  <Text style={styles.lastResult}>
-                    {item.lastExpression} = {item.result}
-                  </Text>
-                )}
-              </TouchableOpacity>
-              <Button
-                title="Edit"
-                onPress={() => {
-                  const newName =
-                    prompt("Enter new calculator name:", item.name) ||
-                    item.name;
-                  updateCalculatorName(item.id, newName);
-                }}
-              />
-              <Button
-                title="Delete"
-                onPress={() => deleteCalculator(item.id)}
-              />
-            </View>
-          )}
-          contentContainerStyle={{ paddingBottom: 100 }}
-        />
-      </ScrollView>
+      <FlatList
+        data={calculators}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <View style={styles.calculatorItem}>
+            <TouchableOpacity
+              style={styles.calculatorNameContainer}
+              onPress={() =>
+                navigation.navigate("Calculator", { calculatorId: item.id })
+              }
+            >
+              <Text style={styles.calculatorName}>{item.name}</Text>
+              {item.lastExpression && (
+                <Text style={styles.lastResult}>
+                  {item.lastExpression} = {item.result}
+                </Text>
+              )}
+            </TouchableOpacity>
+            <Button
+              title="Edit"
+              onPress={() => {
+                const newName =
+                  prompt("Enter new calculator name:", item.name) ||
+                  item.name;
+                updateCalculatorName(item.id, newName);
+              }}
+            />
+            <Button
+              title="Delete"
+              onPress={() => deleteCalculator(item.id)}
+            />
+          </View>
+        )}
+        contentContainerStyle={styles.listContent}
+      />
       <TouchableOpacity style={styles.addButton} onPress={handleAddCalculator}>
         <Text style={styles.addButtonText}>+</Text>
       </TouchableOpacity>
@@ -92,34 +90,56 @@ export const HomeScreen: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16 },
-  title: { fontSize: 24, fontWeight: "bold", marginBottom: 16 },
-  scrollContainer: {
-    flexGrow: 1,
-    paddingBottom: 100,
+  container: {
+    flex: 1,
+    padding: 16,
+    justifyContent: "flex-start",
+  },
+  title: { 
+    fontSize: 24, 
+    fontWeight: "bold", 
+    marginBottom: 16 
+  },
+  listContent: {
+    paddingBottom: 150, // Added padding to ensure last item isn't hidden behind button
   },
   calculatorItem: {
     flexDirection: "column",
     alignItems: "flex-start",
     marginBottom: 8,
   },
-  calculatorNameContainer: { flex: 1 },
-  calculatorName: { fontSize: 18, fontWeight: "bold" },
-  lastResult: { fontSize: 16, color: "#666" },
+  calculatorNameContainer: { 
+    flex: 1 
+  },
+  calculatorName: { 
+    fontSize: 18, 
+    fontWeight: "bold" 
+  },
+  lastResult: { 
+    fontSize: 16, 
+    color: "#666" 
+  },
   addButton: {
     position: "absolute",
     bottom: 30,
-    left: "50%",
-    transform: [{ translateX: -25 }],
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    right: 30,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
     backgroundColor: "#007BFF",
     justifyContent: "center",
     alignItems: "center",
+    elevation: 5, // Shadow for Android
+    shadowColor: "#000", // Shadow for iOS
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
   },
   addButtonText: {
     color: "#fff",
-    fontSize: 24,
+    fontSize: 30,
+    lineHeight: 30,
   },
 });
+
+export default HomeScreen;
