@@ -4,5 +4,5 @@
     name: string;
     expression: string;
     result: string;
-    lastExpression?: string; // New property to hold the last calculated expression
+    lastExpression?: string;
   }

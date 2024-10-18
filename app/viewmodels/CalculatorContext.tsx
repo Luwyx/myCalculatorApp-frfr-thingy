@@ -13,7 +13,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface CalculatorContextType {
   calculators: Calculator[];
-  addCalculator: (name: string) => string; // Returns the ID of the new calculator
+  addCalculator: (name: string) => string;
   deleteCalculator: (id: string) => void;
   updateCalculatorName: (id: string, newName: string) => void;
   updateCalculatorExpression: (id: string, newExpression: string) => void;
@@ -37,7 +37,6 @@ export const CalculatorProvider: React.FC<CalculatorProviderProps> = ({
 }) => {
   const [calculators, setCalculators] = useState<Calculator[]>([]);
 
-  // Load calculators from AsyncStorage when the app starts
   useEffect(() => {
     const loadCalculators = async () => {
       try {
@@ -52,7 +51,6 @@ export const CalculatorProvider: React.FC<CalculatorProviderProps> = ({
     loadCalculators();
   }, []);
 
-  // Save calculators to AsyncStorage whenever they change
   useEffect(() => {
     const saveCalculators = async () => {
       try {
@@ -64,10 +62,8 @@ export const CalculatorProvider: React.FC<CalculatorProviderProps> = ({
     saveCalculators();
   }, [calculators]);
 
-  // Clear AsyncStorage when the app is fully closed
   useEffect(() => {
     const clearStorage = () => {
-      // Use an asynchronous function but don't await it directly in the cleanup function
       const asyncClearStorage = async () => {
         try {
           await AsyncStorage.removeItem(STORAGE_KEY);
@@ -75,11 +71,9 @@ export const CalculatorProvider: React.FC<CalculatorProviderProps> = ({
           console.error("Failed to clear calculators from storage", error);
         }
       };
-
-      asyncClearStorage(); // Call the asynchronous function
+      asyncClearStorage();
     };
-
-    return clearStorage; // Return the synchronous cleanup function
+    return clearStorage;
   }, []);
 
   const addCalculator = (name: string): string => {
@@ -90,7 +84,7 @@ export const CalculatorProvider: React.FC<CalculatorProviderProps> = ({
       result: "",
     };
     setCalculators([...calculators, newCalculator]);
-    return newCalculator.id; // Return the new calculator ID
+    return newCalculator.id;
   };
 
   const deleteCalculator = (id: string) => {
@@ -125,7 +119,7 @@ export const CalculatorProvider: React.FC<CalculatorProviderProps> = ({
               ...calculator,
               result: result.toString(),
               lastExpression: calculator.expression,
-              expression: "", // Clear the expression after evaluation
+              expression: "",
             };
           } catch (error) {
             return {
@@ -157,7 +151,7 @@ export const CalculatorProvider: React.FC<CalculatorProviderProps> = ({
         if (calc.id === calculatorId) {
           return {
             ...calc,
-            expression: calc.expression.slice(0, -1), // Remove the last character
+            expression: calc.expression.slice(0, -1),
           };
         }
         return calc;

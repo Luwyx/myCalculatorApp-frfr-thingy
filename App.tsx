@@ -3,9 +3,10 @@ import "react-native-gesture-handler";
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { HomeScreen } from "./app/views/HomeScreen";
+import HomeScreen from "./app/views/HomeScreen";
 import { CalculatorScreen } from "./app/views/CalculatorScreen";
-import { CalculatorProvider } from "./app/context/CalculatorContext";
+import { CalculatorProvider } from "./app/viewmodels/CalculatorContext";
+import "react-native-get-random-values";
 
 export type RootStackParamList = {
   Home: undefined;
